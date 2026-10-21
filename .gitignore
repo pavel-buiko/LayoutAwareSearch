@@ -1,0 +1,19 @@
+# Visual Studio and user-specific settings
+.vs/
+*.user
+*.suo
+*.pubxml.user
+
+# Build output and generated packages
+**/bin/
+**/obj/
+**/AppPackages/
+**/TestResults/
+
+# Upgrade backups and reports
+/Backup/
+/UpgradeLog*.htm
+
+# Local signing keys
+*.pfx
+*.p12

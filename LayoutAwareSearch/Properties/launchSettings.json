@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "LayoutAwareSearch (Package)": {
+      "commandName": "MsixPackage",
+      "doNotLaunchApp": true
+    },
+    "LayoutAwareSearch (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
