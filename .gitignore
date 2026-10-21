@@ -17,3 +17,5 @@
 # Local signing keys
 *.pfx
 *.p12
+/.release-signing/
+/artifacts/
