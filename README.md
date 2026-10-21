@@ -32,7 +32,17 @@ This corrects the keyboard layout, rather than translating application names. Wi
 
 Query conversion and application indexing run locally. The extension does not send queries to an online search service or change the active keyboard layout.
 
-### Build and install from source
+### Install a ready-made release
+
+Download the **x64** or **ARM64** ZIP from [GitHub Releases](https://github.com/pavel-buiko/LayoutAwareSearch/releases), extract it completely, and open **Install.cmd**. Visual Studio and the .NET SDK are not needed: the runtime is included.
+
+The first preview uses a **self-signed certificate**. The installer displays its fingerprint and asks for your consent before requesting administrator permission to trust it. Compare the fingerprint with the release notes. This trust step is needed once for releases signed by the same key; application installation runs as your original Windows user.
+
+Restart Command Palette and enable **Layout-Aware Search** and **Search apps in other keyboard layouts**. Updates are installed manually from newer releases.
+
+[Full installation, update and removal instructions](docs/INSTALL.md).
+
+### Build from source (for developers)
 
 Requirements:
 
@@ -57,7 +67,7 @@ dotnet build LayoutAwareSearch\LayoutAwareSearch.csproj -p:Platform=x64
 
 Use `-p:Platform=ARM64` for ARM64. This command builds the project; deployment/registration is a separate step.
 
-The manifest currently contains the template publisher identity. Before distributing a signed MSIX, replace it with your own publisher identity and configure the matching signing certificate. This is a community extension for PowerToys.
+The release publisher is `CN=pavel-buiko`. This is a community extension for PowerToys. Release packages are built and signed using the [maintainer instructions](docs/RELEASING.md); private signing material is excluded from Git and release assets.
 
 ### Usage
 
@@ -88,11 +98,12 @@ The checks neither add keyboard layouts nor launch applications. The full integr
 
 Automated checks do not replace a test of the deployed extension inside Command Palette: verify app launch, clearing the query, and **Show all matches** there.
 
-The x64 Debug build and full application-index checks have passed. The x64 Release build also succeeds, but currently reports WinRT trimming warnings (`IL2081`, summarized as `IL2104`) and SDK WinMD packaging warning `APPX1707`. Runtime behavior of a deployed Release package still needs manual verification.
+The x64 Debug build and full application-index checks have passed. Both x64 and ARM64 release packages are built with their .NET runtime included and trimming disabled for WinRT compatibility. Installer checks run under Windows PowerShell with installation and certificate trust mocked. Interactive Command Palette behavior after installation and execution on an ARM64 device still need user validation, so the first release is a preview.
 
 ---
 
 <a id="russian"></a>
+
 ## Русский
 
 ### Для чего нужно расширение
@@ -116,7 +127,17 @@ Layout-Aware Search проверяет исходный запрос и текс
 
 Преобразование запроса и индексация приложений выполняются локально. Расширение не отправляет запросы в интернет-поисковик и не переключает текущую раскладку.
 
-### Сборка и установка из исходников
+### Установка готового релиза
+
+Скачайте ZIP **x64** или **ARM64** из [GitHub Releases](https://github.com/pavel-buiko/LayoutAwareSearch/releases), полностью распакуйте и откройте **Install.cmd**. Visual Studio и .NET SDK не нужны: среда выполнения включена в пакет.
+
+Первая предварительная версия использует **самоподписанный сертификат**. Установщик покажет его отпечаток и запросит ваше согласие перед запросом прав администратора для установки доверия к нему. Сравните отпечаток с описанием релиза. Этот шаг выполняется один раз для версий с тем же ключом; приложение устанавливается для исходного пользователя Windows.
+
+Перезапустите Command Palette и включите **Layout-Aware Search** и **Search apps in other keyboard layouts**. Обновления устанавливаются вручную из новых релизов.
+
+[Полная инструкция установки, обновления и удаления](docs/INSTALL.md).
+
+### Сборка из исходников (для разработчиков)
 
 Требования:
 
@@ -141,7 +162,7 @@ dotnet build LayoutAwareSearch\LayoutAwareSearch.csproj -p:Platform=x64
 
 Для ARM64 используйте `-p:Platform=ARM64`. Команда собирает проект; развёртывание и регистрация выполняются отдельно.
 
-Сейчас манифест содержит идентификатор издателя из шаблона. Перед распространением подписанного MSIX замените его своим идентификатором и настройте соответствующий сертификат подписи. Это независимое расширение для PowerToys.
+Издатель релиза — `CN=pavel-buiko`. Это независимое расширение для PowerToys. Сборка и подпись описаны в [инструкции для сопровождающего](docs/RELEASING.md); приватные материалы подписи исключены из Git и файлов релиза.
 
 ### Использование
 
@@ -172,7 +193,7 @@ dotnet run --project LayoutAwareSearch.Tests\LayoutAwareSearch.Tests.csproj -p:P
 
 Автоматические проверки не заменяют проверку развёрнутого расширения в Command Palette: там нужно проверить запуск приложения, очистку запроса и **Show all matches**.
 
-Сборка x64 Debug и полный прогон проверок индекса приложений прошли успешно. Сборка x64 Release также завершается успешно, но сейчас выдаёт предупреждения тримминга WinRT (`IL2081`, в сводке — `IL2104`) и упаковки SDK WinMD `APPX1707`. Работу развёрнутого Release-пакета ещё нужно проверить вручную.
+Сборка x64 Debug и полный прогон проверок индекса приложений прошли успешно. Релизные пакеты x64 и ARM64 включают среду .NET и собираются с отключённым триммингом для совместимости с WinRT. Проверки установщика выполняются в Windows PowerShell с имитацией установки и доверия сертификату. Работу интерфейса Command Palette после установки и запуск на ARM64-устройстве ещё нужно подтвердить пользователям, поэтому первый выпуск отмечен как предварительный.
 
 ## API references / Документация API
 
