@@ -16,14 +16,18 @@ internal sealed partial class ApplicationFallbackItem : FallbackCommandItem
     {
         _search = search;
         Command = null;
+        Title = string.Empty;
         Icon = IconHelpers.FromRelativePath("Assets\\StoreLogo.png");
     }
 
     public override async void UpdateQuery(string query)
     {
         var version = Interlocked.Increment(ref _version);
-        // A null command hides this fallback; never leave a previous query's app launchable.
+        // CmdPal hides a fallback with an empty title. Also clear the old launch action.
         Command = null;
+        Title = string.Empty;
+        Subtitle = string.Empty;
+        MoreCommands = [];
         try
         {
             var matches = await _search.FindAsync(query);

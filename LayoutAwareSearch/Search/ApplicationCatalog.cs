@@ -18,7 +18,8 @@ internal sealed class ApplicationCatalog
     {
         lock (_gate)
         {
-            if (_refresh is null || (_refresh.IsCompleted && DateTime.UtcNow - _refreshedAt > TimeSpan.FromMinutes(2)))
+            if (_refresh is null || _refresh.IsFaulted || _refresh.IsCanceled
+                || (_refresh.IsCompleted && DateTime.UtcNow - _refreshedAt > TimeSpan.FromMinutes(2)))
             {
                 _refreshedAt = DateTime.UtcNow;
                 _refresh = Task.Run(BuildIndexAsync);
@@ -51,7 +52,7 @@ internal sealed class ApplicationCatalog
                     }
                 }
             }
-            catch (IOException exception)
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
             {
                 Debug.WriteLine(exception);
             }
@@ -79,7 +80,7 @@ internal sealed class ApplicationCatalog
                     }
                 }
                 catch (Exception exception) when (exception is System.Runtime.InteropServices.COMException
-                    or UnauthorizedAccessException or InvalidOperationException)
+                    or UnauthorizedAccessException or InvalidOperationException or IOException)
                 {
                     // Packages can disappear during an update; keep the rest of the index usable.
                     Debug.WriteLine(exception);

@@ -16,7 +16,8 @@ internal static class KeyboardLayoutConverter
         }
 
         query = query.Trim();
-        var queries = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { query };
+        var queries = new List<string> { query };
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { query };
         // Read on every search so changes to the user's input languages take effect immediately.
         var layouts = GetLayouts();
         foreach (var source in layouts)
@@ -25,7 +26,11 @@ internal static class KeyboardLayoutConverter
             {
                 if (source != target)
                 {
-                    queries.Add(Convert(query, source, target));
+                    var converted = Convert(query, source, target);
+                    if (seen.Add(converted))
+                    {
+                        queries.Add(converted);
+                    }
                 }
             }
         }
